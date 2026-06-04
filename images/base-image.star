@@ -43,9 +43,12 @@ image(
         "apt",
         "openssh-server",
         # NetworkManager: connection manager for Ubuntu device images.
-        # Self-enables via postinst and auto-DHCPs unmanaged ethernet,
-        # so the wired NIC comes up with no profile — matching the
-        # Debian sibling's networking choice.
+        # Self-enables via postinst. Ubuntu's network-manager leaves wired
+        # ethernet unmanaged by default (it delegates to netplan, which yoe
+        # images don't carry), so nm-manage-ethernet ships an NM drop-in
+        # that re-includes ethernet — the wired NIC then auto-DHCPs with no
+        # connection profile, matching the Debian sibling.
         "network-manager",
+        "nm-manage-ethernet",
     ],
 )

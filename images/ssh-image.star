@@ -33,6 +33,9 @@ image(
         "dpkg",
         "apt",
         "openssh-server",
+        # network-manager + the drop-in that makes NM manage wired ethernet
+        # on Ubuntu (see base-image for why the drop-in is needed).
         "network-manager",
+        "nm-manage-ethernet",
     ],
 )

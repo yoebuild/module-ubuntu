@@ -74,25 +74,28 @@ allow-list to any new key, and atomically rewrites
 
 ## Toolchain
 
-`containers/toolchain-glibc` is the Ubuntu/glibc build toolchain. It
+`containers/toolchain-ubuntu-26.04` is the Ubuntu/glibc build toolchain. It
 declares `provides = ["toolchain"]` and `distro = "ubuntu"`, wiring it
 into yoe's distro-aware toolchain dispatch: Ubuntu images resolve the
 virtual `toolchain` reference to this container, Debian images resolve it
-to `module-debian`'s glibc toolchain, and Alpine images resolve it to
+to `module-debian`'s Debian toolchain, and Alpine images resolve it to
 `module-alpine`'s `toolchain-musl`.
 
-`module-debian` ships a `toolchain-glibc` under the same unit name. A
-project that lists both modules gets deterministic last-module-wins
-shadowing on that name; since both are interchangeable glibc/dpkg
-toolchains (mmdebstrap pulls every target package from the project's own
-repo, and the prebuilt-`.deb` units only extract data tars), either can
-assemble either rootfs.
+The Ubuntu and Debian glibc toolchains are **not** interchangeable, and the
+unit name carries the release (`toolchain-ubuntu-26.04`) to keep them apart.
+The container image tag is `yoe/<unit-name>:<version>-<arch>`, so two
+toolchains sharing a name would share a tag and silently overwrite each
+other's image — and apt is not forward-compatible across suites, so an
+Ubuntu-resolute rootfs assembled by Debian-trixie's apt crashes reading the
+resolute repository metadata. Each release-coupled toolchain therefore gets
+its own name and its own image.
 
 ## Images
 
 - `base-image` — the smallest closure that boots in QEMU and accepts an
   SSH login: kernel, systemd init, libc, coreutils, bash, dpkg/apt,
-  openssh-server, and NetworkManager for DHCP.
+  openssh-server, and NetworkManager (plus `nm-manage-ethernet`) for
+  wired DHCP.
 - `ssh-image` — the same boot + SSH closure with no extra tooling, for an
   apples-to-apples size comparison against `module-alpine`'s `ssh-image`.
 - `dev-image` — the base closure plus a diagnostic and editor userland
@@ -104,3 +107,14 @@ installs exactly the listed closure and its hard dependencies — no
 implicit Essential/Priority base. That keeps images minimal but means
 the packages dpkg needs at configure time are listed explicitly in each
 image (`dash`, `diffutils`, `libc-bin`, `base-files`, `base-passwd`).
+
+## Networking
+
+Ubuntu's `network-manager` ships a drop-in that restricts NetworkManager
+to wifi/cellular and delegates wired ethernet to netplan, which yoe images
+don't carry — so out of the box the wired NIC stays `unmanaged` and the
+image has no network. The images include the `nm-manage-ethernet` unit,
+which lays down `/etc/NetworkManager/conf.d/15-yoe-manage-ethernet.conf`
+to re-include ethernet in NetworkManager's managed set. The wired NIC then
+auto-DHCPs with no connection profile, matching how NetworkManager behaves
+by default on Debian.

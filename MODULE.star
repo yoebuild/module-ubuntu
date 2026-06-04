@@ -1,6 +1,6 @@
 module_info(
     name = "ubuntu",
-    description = "Wraps Ubuntu's package feeds as yoe units, and ships an Ubuntu/glibc-side build toolchain (toolchain-glibc). Ubuntu shares Debian's apt/dpkg repository format, so it uses the same apt_feed() builtin with distro = \"ubuntu\". The Ubuntu release pinned below MUST match the FROM ubuntu:<release> in containers/toolchain-glibc/Dockerfile — packages from these feeds are ABI- and signing-key-coupled to the toolchain libc.",
+    description = "Wraps Ubuntu's package feeds as yoe units, and ships an Ubuntu/glibc-side build toolchain (toolchain-ubuntu-26.04). Ubuntu shares Debian's apt/dpkg repository format, so it uses the same apt_feed() builtin with distro = \"ubuntu\". The Ubuntu release pinned below MUST match the FROM ubuntu:<release> in containers/toolchain-ubuntu-26.04/Dockerfile — packages from these feeds are ABI- and signing-key-coupled to the toolchain libc.",
 )
 
 # Ubuntu shares Debian's apt/dpkg repository format, so it is wrapped

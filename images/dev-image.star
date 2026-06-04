@@ -31,9 +31,10 @@ image(
         "dpkg",
         "apt",
         "openssh-server",
-        # NetworkManager auto-DHCPs the unmanaged wired QEMU NIC; see
-        # base-image for the rationale.
+        # network-manager + the drop-in that makes NM manage (auto-DHCP)
+        # the wired QEMU NIC on Ubuntu; see base-image for the rationale.
         "network-manager",
+        "nm-manage-ethernet",
         # dev additions
         "ca-certificates",
         "curl",
