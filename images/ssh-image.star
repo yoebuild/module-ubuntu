@@ -8,7 +8,7 @@ load("//classes/kernel.star", "ubuntu_kernel")
 # smallest boot + SSH set): kernel, systemd init, libc, coreutils, bash,
 # dpkg/apt, openssh-server, and NetworkManager for DHCP.
 #
-# distro = "debian" selects yoe's apt/dpkg/glibc backend (the package-
+# distro = "ubuntu" selects yoe's apt/dpkg/glibc backend (the package-
 # format family, not the upstream archive). The custom mmdebstrap variant
 # installs exactly this closure and its hard dependencies, so the
 # dpkg-configure essentials (dash, diffutils, libc-bin, base-files,
@@ -16,7 +16,7 @@ load("//classes/kernel.star", "ubuntu_kernel")
 # each is required.
 image(
     name = "ssh-image",
-    distro = "debian",
+    distro = "ubuntu",
     artifacts = [
         ubuntu_kernel(),
         "systemd-sysv",

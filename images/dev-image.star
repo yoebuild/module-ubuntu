@@ -7,11 +7,11 @@ load("//classes/kernel.star", "ubuntu_kernel")
 # (htop, strace, less, file, curl, etc.) using Ubuntu's apt-side
 # equivalents.
 #
-# distro = "debian" selects yoe's apt/dpkg/glibc backend (the package-
+# distro = "ubuntu" selects yoe's apt/dpkg/glibc backend (the package-
 # format family, not the upstream archive).
 image(
     name = "dev-image",
-    distro = "debian",
+    distro = "ubuntu",
     artifacts = [
         # base-image closure
         ubuntu_kernel(),

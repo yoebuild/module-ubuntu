@@ -8,11 +8,11 @@ load("//classes/kernel.star", "ubuntu_kernel")
 # device's runtime requirements grow; the Debian sibling is
 # module-debian's base-image.
 #
-# distro = "debian" selects yoe's apt/dpkg/glibc backend — the same
-# rootfs-assembly and toolchain path Debian uses. Ubuntu is part of that
-# family, so it rides the existing backend rather than introducing a
-# parallel one; "debian" here names the package-format family, not the
-# upstream archive.
+# distro = "ubuntu" is its own distro in yoe's resolver (so Ubuntu and
+# Debian images don't collide), but it rides the shared apt/dpkg/glibc
+# backend — the same mmdebstrap rootfs-assembly and toolchain path Debian
+# uses. yoe treats "debian" and "ubuntu" as one apt family for assembly
+# while keeping their feeds, suites, and closures distinct.
 #
 # The rootfs is assembled with `mmdebstrap --variant=custom`, which
 # installs exactly this closure and its hard dependencies — no implicit
@@ -24,7 +24,7 @@ load("//classes/kernel.star", "ubuntu_kernel")
 # "expected programs not found in PATH".
 image(
     name = "base-image",
-    distro = "debian",
+    distro = "ubuntu",
     artifacts = [
         ubuntu_kernel(),
         "systemd-sysv",
