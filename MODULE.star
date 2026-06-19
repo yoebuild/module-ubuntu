@@ -55,3 +55,45 @@ apt_feed(
     index = "feeds/main",
     keyring = "keys/ubuntu-archive-keyring.gpg",
 )
+
+apt_feed(
+    name = "universe",
+    distro = "ubuntu",
+    url = _UBUNTU_MIRROR,
+    arch_urls = {
+        "arm64": _UBUNTU_PORTS,
+    },
+    suite = _UBUNTU_SUITE,
+    component = "universe",
+    arches = ["amd64", "arm64"],
+    index = "feeds/universe",
+    keyring = "keys/ubuntu-archive-keyring.gpg",
+)
+
+apt_feed(
+    name = "restricted",
+    distro = "ubuntu",
+    url = _UBUNTU_MIRROR,
+    arch_urls = {
+        "arm64": _UBUNTU_PORTS,
+    },
+    suite = _UBUNTU_SUITE,
+    component = "restricted",
+    arches = ["amd64", "arm64"],
+    index = "feeds/restricted",
+    keyring = "keys/ubuntu-archive-keyring.gpg",
+)
+
+apt_feed(
+    name = "multiverse",
+    distro = "ubuntu",
+    url = _UBUNTU_MIRROR,
+    arch_urls = {
+        "arm64": _UBUNTU_PORTS,
+    },
+    suite = _UBUNTU_SUITE,
+    component = "multiverse",
+    arches = ["amd64", "arm64"],
+    index = "feeds/multiverse",
+    keyring = "keys/ubuntu-archive-keyring.gpg",
+)
