@@ -37,11 +37,20 @@ mirrors ship an InRelease signed by the same Ubuntu archive key.
 ## Layout
 
 ```
-MODULE.star                # apt_feed(distro="ubuntu", ...) declaration
+MODULE.star                # apt_feed(distro="ubuntu", ...) declarations
 feeds/
-  main/
+  main/                    # Canonical-supported core
     amd64/Packages         # checked-in catalog snapshot (archive.ubuntu.com)
     arm64/Packages         # checked-in catalog snapshot (ports.ubuntu.com)
+  universe/                # community-maintained, the bulk of the archive
+    amd64/Packages
+    arm64/Packages
+  restricted/              # proprietary drivers (Canonical-supported)
+    amd64/Packages
+    arm64/Packages
+  multiverse/              # non-free / legally restricted
+    amd64/Packages
+    arm64/Packages
 keys/
   ubuntu-archive-keyring.gpg   # bootstrap keyring for InRelease verification
   allowed-fingerprints         # fingerprint allow-list for new keys
@@ -59,18 +68,27 @@ images/
 ## Feeds
 
 Each `apt_feed()` call registers a synthetic module named
-`ubuntu.<component>` (e.g. `ubuntu.main`), so consumers reference packages
-via `ubuntu.main` in `prefer_modules`. Declaring a feed costs one Starlark
-call and the checked-in `Packages` text — units materialize lazily as the
-runtime closure references them, so working memory tracks closure size,
-not the full catalog.
+`ubuntu.<component>`, so consumers reference packages via `ubuntu.main`,
+`ubuntu.universe`, `ubuntu.restricted`, or `ubuntu.multiverse` in
+`prefer_modules`. Declaring a feed costs one Starlark call and the
+checked-in `Packages` text — units materialize lazily as the runtime
+closure references them, so working memory tracks closure size, not the
+full catalog. This is why all four of Ubuntu's components are declared
+even though `universe` alone carries ~66k entries per arch: the catalog
+text is just sitting on disk, not loaded into memory.
+
+The four components map to Ubuntu's archive sections: `main` (core,
+Canonical-supported), `universe` (community-maintained, the bulk of the
+archive), `restricted` (proprietary drivers), and `multiverse` (non-free /
+legally restricted). All four live under the same suite and are signed by
+the same archive key.
 
 To refresh the in-tree `Packages` files after Ubuntu ships a point release
 or security update, run `yoe update-feeds --arch x86_64,arm64` in this
-module's root. That fetches the feed's `InRelease`, verifies the signature
-against `keys/ubuntu-archive-keyring.gpg`, applies the fingerprint
-allow-list to any new key, and atomically rewrites
-`feeds/main/<arch>/Packages`.
+module's root. That fetches each feed's `InRelease`, verifies the
+signature against `keys/ubuntu-archive-keyring.gpg`, applies the
+fingerprint allow-list to any new key, and atomically rewrites every
+`feeds/<component>/<arch>/Packages`.
 
 ## Toolchain
 
