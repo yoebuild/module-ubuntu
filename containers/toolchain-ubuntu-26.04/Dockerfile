@@ -7,7 +7,7 @@
 #
 # UBUNTU VERSION COUPLING — read before bumping the FROM line below.
 #
-# This container's Ubuntu release SHOULD track _UBUNTU_SUITE in this
+# This container's Ubuntu release SHOULD track _UBUNTU_CODENAME in this
 # module's MODULE.star. The target packages from the feed are prebuilt
 # .debs whose data tars are extracted verbatim (no compilation against
 # this toolchain's libc), so an exact match is not a hard correctness
@@ -15,7 +15,7 @@
 # mmdebstrap stack aligned with the target release avoids surprises when
 # mmdebstrap assembles the rootfs.
 #
-# When bumping: update the FROM tag here AND _UBUNTU_SUITE in this
+# When bumping: update the FROM tag here AND _UBUNTU_CODENAME in this
 # module's MODULE.star in the same commit, then rebuild the container so
 # its baked ubuntu-keyring matches.
 

@@ -2,7 +2,7 @@ load("@core//classes/container.star", "container")
 
 # toolchain-ubuntu-26.04 is the Ubuntu/glibc-side build toolchain. It lives
 # in module-ubuntu because it is Ubuntu-side build infrastructure coupled to
-# the Ubuntu release pinned in this module's MODULE.star (_UBUNTU_SUITE) and
+# the Ubuntu release pinned in this module's MODULE.star (_UBUNTU_CODENAME) and
 # the FROM line in this container's Dockerfile.
 #
 # provides = ["toolchain"] + distro = "ubuntu" wire this into yoe's

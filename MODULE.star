@@ -6,10 +6,18 @@ module_info(
 # Ubuntu shares Debian's apt/dpkg repository format, so it is wrapped
 # with the same apt_feed() builtin rather than a bespoke one. Each
 # call registers a synthetic module named "<parent>.<component>", so
-# consumers reference packages via "ubuntu.main" in prefer_modules. The
-# suite kwarg is feed configuration (it picks which on-disk Packages
-# file is parsed); only one suite per distro per project is supported,
-# so it does not appear in the module identity.
+# consumers reference packages via "ubuntu.main" in prefer_modules.
+# Neither the suite nor the codename appears in the module identity.
+#
+# suite vs codename: `suite` is the dists/<suite> path segment the feed
+# fetches from, and `codename` is the release the packages are built
+# for. They are the same string for these feeds because they serve the
+# base archive directly, but they are not the same kind of value — a
+# release is also reachable under moving aliases, its security and
+# updates pockets are suffixed suites of that same release, and a
+# vendor overlay repo may name its channel anything. yoe requires every
+# apt feed in an Ubuntu closure to agree on the codename (the libc ABI
+# depends on it) while leaving suites free to differ.
 #
 # Units materialize lazily as the runtime closure references them —
 # declaring a feed costs one Starlark call and the checked-in Packages
@@ -40,7 +48,7 @@ module_info(
 
 _UBUNTU_MIRROR = "http://archive.ubuntu.com/ubuntu"
 _UBUNTU_PORTS = "http://ports.ubuntu.com/ubuntu-ports"
-_UBUNTU_SUITE = "resolute"
+_UBUNTU_CODENAME = "resolute"
 
 apt_feed(
     name = "main",
@@ -49,7 +57,8 @@ apt_feed(
     arch_urls = {
         "arm64": _UBUNTU_PORTS,
     },
-    suite = _UBUNTU_SUITE,
+    suite = _UBUNTU_CODENAME,
+    codename = _UBUNTU_CODENAME,
     component = "main",
     arches = ["amd64", "arm64"],
     index = "feeds/main",
@@ -63,7 +72,8 @@ apt_feed(
     arch_urls = {
         "arm64": _UBUNTU_PORTS,
     },
-    suite = _UBUNTU_SUITE,
+    suite = _UBUNTU_CODENAME,
+    codename = _UBUNTU_CODENAME,
     component = "universe",
     arches = ["amd64", "arm64"],
     index = "feeds/universe",
@@ -77,7 +87,8 @@ apt_feed(
     arch_urls = {
         "arm64": _UBUNTU_PORTS,
     },
-    suite = _UBUNTU_SUITE,
+    suite = _UBUNTU_CODENAME,
+    codename = _UBUNTU_CODENAME,
     component = "restricted",
     arches = ["amd64", "arm64"],
     index = "feeds/restricted",
@@ -91,7 +102,8 @@ apt_feed(
     arch_urls = {
         "arm64": _UBUNTU_PORTS,
     },
-    suite = _UBUNTU_SUITE,
+    suite = _UBUNTU_CODENAME,
+    codename = _UBUNTU_CODENAME,
     component = "multiverse",
     arches = ["amd64", "arm64"],
     index = "feeds/multiverse",

@@ -9,7 +9,7 @@ and republish it through yoe's project repo. A unit's "build" is just
 extracting the deb's `data.tar` into `$DESTDIR`.
 
 The module currently tracks Ubuntu **Resolute Raccoon (26.04 LTS)**. The
-suite pinned in `MODULE.star` (`_UBUNTU_SUITE`) should track the
+suite pinned in `MODULE.star` (`_UBUNTU_CODENAME`) should track the
 `FROM ubuntu:<release>` line in `containers/toolchain-glibc/Dockerfile`.
 
 ## Ubuntu is its own distro
